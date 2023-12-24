@@ -45,7 +45,7 @@ $(() => {
     let count = 0;
     for (const coin of coins) {
       const div = `<div class="card">
-      <button class="checkbox ${coin.symbol}">button</button>
+      <button class="checkbox ${coin.symbol}">+</button>
         <div><img src="${coin.image.small}"></div>
         <div>${coin.symbol}</div>
         <div>${coin.name}</div>
