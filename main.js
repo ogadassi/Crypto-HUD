@@ -9,7 +9,9 @@ $(() => {
   async function createHome() {
     const coins = await getJson("assets/jsons/coins.json");
     displayCoins(coins);
-    getRandomNewsItem();
+    setInterval(() => {
+      getRandomNewsItem();
+    }, 14500);
   }
   function createReports() {
     $("#container").html("Reports");
@@ -175,11 +177,9 @@ $(() => {
 
   async function getRandomNewsItem() {
     const news = await getJson("assets/jsons/news.json");
-    setInterval(() => {
-      $(".ticker__item").text(
-        news.headlines[Math.floor(Math.random() * 29)].title
-      );
-    }, 14500);
+    $(".ticker__item").text(
+      news.headlines[Math.floor(Math.random() * 29)].title
+    );
   }
 
   async function getJson(url) {
