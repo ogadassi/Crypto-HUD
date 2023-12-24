@@ -2,6 +2,8 @@ body {
   text-align: center;
   height: 100%;
   background-color: #85c69c;
+  margin: 0;
+  padding: 0;
 }
 .card {
   border: 1px solid;

@@ -11,7 +11,7 @@ $(() => {
     displayCoins(coins);
     setInterval(() => {
       getRandomNewsItem();
-    }, 14500);
+    }, 15000);
   }
   function createReports() {
     $("#container").html("Reports");
