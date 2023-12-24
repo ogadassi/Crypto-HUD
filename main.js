@@ -65,6 +65,21 @@ $(() => {
       button.addEventListener("click", toggleMoreInfo);
     }
   }
+  async function toggleMoreInfo() {
+    const coinId = $(this).data("coin-id");
+    const prices = await getMoreInfo(coinId);
+    const div = $(`button[data-coin-id="${coinId}"] + div`);
+
+    div
+      .html(
+        `
+      <div>USD: $${prices.usd} </div>
+      <div>EUR: €${prices.eur} </div>
+      <div>ILS: ₪${prices.ils} </div>
+    `
+      )
+      .slideToggle();
+  }
   let chosenButtonsArr = [];
 
   $("#container").on("click", "button.checkbox", function () {
@@ -140,27 +155,12 @@ $(() => {
 
   function hideModal() {
     $("#modal").fadeOut(500, function () {
-      // Retrieve the coinNameToRemove from the data attribute
       const coinNameToRemove = $("#modalExit").data("coinNameToRemove");
 
-      // Remove the "checked" class from the corresponding button
       $(".checkbox." + coinNameToRemove).removeClass("checked");
     });
   }
 
-  async function toggleMoreInfo() {
-    const coinId = this.getAttribute("data-coin-id");
-    const prices = await getMoreInfo(coinId);
-    const div = document.querySelector(
-      `button[data-coin-id="${coinId}"] + div`
-    );
-    div.innerHTML = `
-    <div>USD: $${prices.usd} </div>
-    <div>EUR: €${prices.eur} </div>
-    <div>ILS: ₪${prices.ils} </div>`;
-
-    div.classList.toggle("hidden");
-  }
   //   -----------------------------------------------------------------------
   async function getMoreInfo(coinId) {
     let prices = JSON.parse(localStorage.getItem(coinId));

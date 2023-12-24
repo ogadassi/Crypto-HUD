@@ -9,11 +9,16 @@ body {
   border: 1px solid;
   margin: 10px;
   padding: 10px;
-  width: 300px;
-  height: 200px;
+  width: 200px;
+  height: 250px;
   border-radius: 10px;
   box-shadow: 1px 15px 25px rgba(43, 94, 63, 0.527);
-  background-image: linear-gradient(rgb(230, 255, 240), rgb(195, 255, 220));
+  background: rgba(203, 255, 237, 0.47);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5.7px);
+  -webkit-backdrop-filter: blur(5.7px);
+  border: 1px solid rgb(160, 253, 203);
   overflow: auto;
   display: inline-block;
 }
