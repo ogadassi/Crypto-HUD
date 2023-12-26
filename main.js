@@ -13,9 +13,11 @@ $(() => {
       getRandomNewsItem();
     }, 15000);
   }
+
   function createReports() {
     $("#container").html("Reports");
   }
+
   function createAbout() {
     $("#container").html("About");
   }
@@ -30,13 +32,10 @@ $(() => {
         coin.id.includes(searchWord) ||
         coin.symbol.includes(searchWord) ||
         coin.name.includes(searchWord)
-      ) {
+      )
         matchingCoins.push(coin);
-      }
     }
-    if (matchingCoins.length >= 0) {
-      displayCoins(matchingCoins);
-    }
+    displayCoins(matchingCoins);
   });
 
   //   coin display
@@ -45,7 +44,14 @@ $(() => {
     let count = 0;
     for (const coin of coins) {
       const div = `<div class="card">
-      <button class="checkbox ${coin.symbol}">+</button>
+      <div id="menuToggle">
+      <input class="checkbox ${coin.symbol}" id="checkbox${coin.id}" type="checkbox">
+      <label class="toggle" for="checkbox${coin.id}">
+          <div class="bar bar--top"></div>
+          <div class="bar bar--middle"></div>
+          <div class="bar bar--bottom"></div>
+      </label>
+    </div>
         <div><img src="${coin.image.small}"></div>
         <div>${coin.symbol}</div>
         <div>${coin.name}</div>
@@ -80,18 +86,19 @@ $(() => {
       )
       .slideToggle();
   }
+
   let chosenButtonsArr = [];
-
-  $("#container").on("click", "button.checkbox", function () {
+  $("#container").on("click", "input.checkbox", function () {
     this.classList.toggle("checked");
-
     if (this.classList.contains("checked")) {
       if (chosenButtonsArr.indexOf(this) === -1) {
         if (chosenButtonsArr.length < 5) {
           chosenButtonsArr.push(this);
+          console.log(chosenButtonsArr);
         } else {
           getCoinsFromButtons(chosenButtonsArr);
           this.classList.remove("checked");
+          chosenButtonsArr.push(this);
         }
       }
     } else {
@@ -105,8 +112,6 @@ $(() => {
   let chosenCoinsArr = [];
   async function getCoinsFromButtons(arr) {
     const coins = await getJson("assets/jsons/coins.json");
-
-    chosenCoinsArr = [];
 
     for (const coin of coins) {
       for (const button of arr) {
@@ -125,11 +130,11 @@ $(() => {
     content += `<button id="modalExit">x</button>`;
     for (const coin of chosenCoinsArr) {
       content += `<div class="modalCard">
-          <div><img src="${coin.image.small}"></div>
-          <div>${coin.symbol}</div>
-          <div>${coin.name}</div>
-          <button class="removeBtn ${coin.name}">remove</button>
-          </div>`;
+      <div><img src="${coin.image.small}"></div>
+      <div>${coin.symbol}</div>
+      <div>${coin.name}</div>
+      <button class="removeBtn ${coin.name}">remove</button>
+      </div>`;
     }
     content += `</div>`;
     $("#modalContainer").html(content);
@@ -138,27 +143,17 @@ $(() => {
   $("#modalContainer").on("click", "#modalExit", () => hideModal());
 
   $("#modalContainer").on("click", ".removeBtn", function () {
-    const coinNameToRemove = this.classList[1];
-
-    const indexToRemove = chosenCoinsArr.findIndex(
-      (coin) => coin.name === coinNameToRemove
-    );
-
-    if (indexToRemove !== -1) {
-      chosenCoinsArr.splice(indexToRemove, 1);
+    for (const coin of $(`.card`).toArray()) {
+      if (coin.children[3].innerText === this.classList[1]) {
+        $(coin.children[0].children[0]).click();
+      }
     }
-
     hideModal();
-
-    $(".checkbox." + coinNameToRemove).removeClass("checked");
   });
 
   function hideModal() {
-    $("#modal").fadeOut(500, function () {
-      const coinNameToRemove = $("#modalExit").data("coinNameToRemove");
-
-      $(".checkbox." + coinNameToRemove).removeClass("checked");
-    });
+    $("#modal").fadeOut(500);
+    console.log(chosenCoinsArr);
   }
 
   //   -----------------------------------------------------------------------
@@ -170,7 +165,11 @@ $(() => {
     const usd = coinInfo.market_data.current_price.usd;
     const eur = coinInfo.market_data.current_price.eur;
     const ils = coinInfo.market_data.current_price.ils;
-    prices = { usd, eur, ils };
+    prices = {
+      usd,
+      eur,
+      ils,
+    };
     localStorage.setItem(coinId, JSON.stringify(prices));
     return prices;
   }

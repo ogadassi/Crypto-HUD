@@ -32,21 +32,37 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
+          <ul class="navbar-nav nav-tabs me-auto mb-2 mb-lg-0" role="tablist">
+            <li class="nav-item" role="presentation">
               <a
-                class="nav-link active"
+                class="nav-link"
                 id="homeLink"
                 aria-current="page"
+                data-bs-toggle="tab"
+                role="tab"
                 href="#"
                 >Home</a
               >
             </li>
-            <li class="nav-item">
-              <a id="reportsLink" class="nav-link" href="#">My Reports</a>
+            <li class="nav-item" role="presentation">
+              <a
+                id="reportsLink"
+                data-bs-toggle="tab"
+                role="tab"
+                class="nav-link"
+                href="#"
+                >My Reports</a
+              >
             </li>
-            <li class="nav-item">
-              <a id="aboutLink" class="nav-link" href="#">About</a>
+            <li class="nav-item" role="presentation">
+              <a
+                id="aboutLink"
+                data-bs-toggle="tab"
+                role="tab"
+                class="nav-link"
+                href="#"
+                >About</a
+              >
             </li>
           </ul>
           <a class="logo" href="#"
@@ -64,7 +80,6 @@
     </nav>
     <div id="modalContainer"></div>
     <section id="container"></section>
-
     <div class="tickerBg"></div>
     <div class="ticker-wrap">
       <div class="ticker">
