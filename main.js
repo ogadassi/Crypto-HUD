@@ -1,13 +1,14 @@
 "use strict";
-$(() => {
+$(async () => {
+  const coins = await getJson("assets/jsons/coins.json");
   createHome();
+
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
   $("#aboutLink").click(() => createAbout());
 
   //   pages creation
-  async function createHome() {
-    const coins = await getJson("assets/jsons/coins.json");
+  function createHome() {
     displayCoins(coins);
     setInterval(() => {
       getRandomNewsItem();
@@ -23,19 +24,22 @@ $(() => {
   }
 
   //   search function
-  $("#searchBox").on("input", async () => {
+  $("#searchBox").on("input", () => {
     const searchWord = $("#searchBox").val();
-    let matchingCoins = [];
-    const coins = await getJson("assets/jsons/coins.json");
+
+    for (const card of $(".card")) {
+      card.classList.add("hidden");
+    }
+
     for (const coin of coins) {
       if (
-        coin.id.includes(searchWord) ||
-        coin.symbol.includes(searchWord) ||
-        coin.name.includes(searchWord)
-      )
-        matchingCoins.push(coin);
+        coin.name.toLowerCase().includes(searchWord.toLowerCase()) ||
+        coin.symbol.toLowerCase().includes(searchWord.toLowerCase()) ||
+        coin.id.toLowerCase().includes(searchWord.toLowerCase())
+      ) {
+        $(`.card${coin.name}`).removeClass("hidden");
+      }
     }
-    displayCoins(matchingCoins);
   });
 
   //   coin display
@@ -43,7 +47,7 @@ $(() => {
     let content = "";
     let count = 0;
     for (const coin of coins) {
-      const div = `<div class="card">
+      const div = `<div class="card card${coin.name}">
       <div id="menuToggle">
       <input class="checkbox ${coin.symbol}" id="checkbox${coin.id}" type="checkbox">
       <label class="toggle" for="checkbox${coin.id}">
@@ -52,7 +56,7 @@ $(() => {
           <div class="bar bar--bottom"></div>
       </label>
     </div>
-        <div><img src="${coin.image.small}"></div>
+        <div><img src="${coin.image.large}"></div>
         <div>${coin.symbol}</div>
         <div>${coin.name}</div>
         <button id="btn${count}" class='moreInfo' data-coin-id="${coin.id}">More Info</button>
@@ -87,60 +91,42 @@ $(() => {
       .slideToggle();
   }
 
-  let chosenButtonsArr = [];
+  let chosenCoins = new Map();
   $("#container").on("click", "input.checkbox", function () {
-    this.classList.toggle("checked");
-    if (this.classList.contains("checked")) {
-      if (chosenButtonsArr.indexOf(this) === -1) {
-        if (chosenButtonsArr.length < 5) {
-          chosenButtonsArr.push(this);
-          console.log(chosenButtonsArr);
-        } else {
-          getCoinsFromButtons(chosenButtonsArr);
-          this.classList.remove("checked");
-          chosenButtonsArr.push(this);
+    for (const coin of coins) {
+      if (coin.symbol === this.classList[1]) {
+        if (!chosenCoins.has(this.id) && this.checked) {
+            console.log(this);
+            this.classList.add('checked')
+          chosenCoins.set(this.id, coin);
         }
-      }
-    } else {
-      const index = chosenButtonsArr.indexOf(this);
-      if (index !== -1) {
-        chosenButtonsArr.splice(index, 1);
+        if (chosenCoins.has(this.id) && !this.checked) {
+            this.classList.remove('checked')
+          chosenCoins.delete(this.id);
+        }
+        if (chosenCoins.size === 6) showModal();
+        console.log(chosenCoins);
+        break;
       }
     }
   });
 
-  let chosenCoinsArr = [];
-  async function getCoinsFromButtons(arr) {
-    const coins = await getJson("assets/jsons/coins.json");
-
-    for (const coin of coins) {
-      for (const button of arr) {
-        if (coin.symbol === button.classList[1] && chosenCoinsArr.length < 5) {
-          chosenCoinsArr.push(coin);
-        }
-      }
-    }
-
-    showModal();
-  }
-
   function showModal() {
     let content = `<div id="modal">`;
-    console.log(chosenCoinsArr);
-    content += `<button id="modalExit">x</button>`;
-    for (const coin of chosenCoinsArr) {
+
+
+    for (const coin of chosenCoins) {
+      console.log(coin[1]);
       content += `<div class="modalCard">
-      <div><img src="${coin.image.small}"></div>
-      <div>${coin.symbol}</div>
-      <div>${coin.name}</div>
-      <button class="removeBtn ${coin.name}">remove</button>
+      <div><img src="${coin[1].image.small}"></div>
+      <div>${coin[1].symbol}</div>
+      <div>${coin[1].name}</div>
+      <button class="removeBtn ${coin[1].name}">remove</button>
       </div>`;
     }
     content += `</div>`;
     $("#modalContainer").html(content);
   }
-
-  $("#modalContainer").on("click", "#modalExit", () => hideModal());
 
   $("#modalContainer").on("click", ".removeBtn", function () {
     for (const coin of $(`.card`).toArray()) {
@@ -153,7 +139,6 @@ $(() => {
 
   function hideModal() {
     $("#modal").fadeOut(500);
-    console.log(chosenCoinsArr);
   }
 
   //   -----------------------------------------------------------------------
