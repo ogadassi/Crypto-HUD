@@ -61,8 +61,10 @@ $(async () => {
         <div>${coin.name}</div>
         <button id="btn${count}" class='moreInfo' data-coin-id="${coin.id}">More Info</button>
         <div class="more-info hidden">
-          more info
+        more info
         </div>
+        <div id="spinner${coin.id}" class="spinner hidden"></div>
+        
       </div>`;
       content += div;
       count++;
@@ -96,12 +98,12 @@ $(async () => {
     for (const coin of coins) {
       if (coin.symbol === this.classList[1]) {
         if (!chosenCoins.has(this.id) && this.checked) {
-            console.log(this);
-            this.classList.add('checked')
+          console.log(this);
+          this.classList.add("checked");
           chosenCoins.set(this.id, coin);
         }
         if (chosenCoins.has(this.id) && !this.checked) {
-            this.classList.remove('checked')
+          this.classList.remove("checked");
           chosenCoins.delete(this.id);
         }
         if (chosenCoins.size === 6) showModal();
@@ -113,7 +115,6 @@ $(async () => {
 
   function showModal() {
     let content = `<div id="modal">`;
-
 
     for (const coin of chosenCoins) {
       console.log(coin[1]);
@@ -143,20 +144,41 @@ $(async () => {
 
   //   -----------------------------------------------------------------------
   async function getMoreInfo(coinId) {
+    showSpinner(coinId); // Show spinner while fetching data
+
     let prices = JSON.parse(localStorage.getItem(coinId));
-    if (prices) return prices;
-    const url = "https://api.coingecko.com/api/v3/coins/" + coinId;
-    const coinInfo = await getJson(url);
-    const usd = coinInfo.market_data.current_price.usd;
-    const eur = coinInfo.market_data.current_price.eur;
-    const ils = coinInfo.market_data.current_price.ils;
-    prices = {
-      usd,
-      eur,
-      ils,
-    };
-    localStorage.setItem(coinId, JSON.stringify(prices));
-    return prices;
+    if (prices) {
+      hideSpinner(coinId); // Hide spinner if data is retrieved from localStorage
+      return prices;
+    }
+
+    try {
+      const url = "https://api.coingecko.com/api/v3/coins/" + coinId;
+      const coinInfo = await getJson(url);
+      const usd = coinInfo.market_data.current_price.usd;
+      const eur = coinInfo.market_data.current_price.eur;
+      const ils = coinInfo.market_data.current_price.ils;
+      prices = {
+        usd,
+        eur,
+        ils,
+      };
+      localStorage.setItem(coinId, JSON.stringify(prices));
+      hideSpinner(coinId); // Hide spinner after data is loaded
+      return prices;
+    } catch (error) {
+      hideSpinner(coinId); // Hide spinner in case of an error
+      console.error("Error fetching data:", error);
+      // Handle the error as needed
+    }
+  }
+
+  function showSpinner(coinId) {
+    $(`#spinner${coinId}`).removeClass("hidden");
+  }
+
+  function hideSpinner(coinId) {
+    $(`#spinner${coinId}`).addClass("hidden");
   }
 
   async function getRandomNewsItem() {
