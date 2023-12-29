@@ -32,13 +32,8 @@ $(async () => {
     }
 
     for (const coin of coins) {
-      if (
-        coin.name.toLowerCase().includes(searchWord.toLowerCase()) ||
-        coin.symbol.toLowerCase().includes(searchWord.toLowerCase()) ||
-        coin.id.toLowerCase().includes(searchWord.toLowerCase())
-      ) {
+      if (coin.symbol.toLowerCase().includes(searchWord.toLowerCase()))
         $(`.card${coin.name}`).removeClass("hidden");
-      }
     }
   });
 
@@ -57,8 +52,8 @@ $(async () => {
       </label>
     </div>
         <div><img src="${coin.image.large}"></div>
-        <div>${coin.symbol}</div>
-        <div>${coin.name}</div>
+        <div id='symbol'>(${coin.symbol})</div>
+        <div id='name'>${coin.name}</div>
         <button id="btn${count}" class='moreInfo' data-coin-id="${coin.id}">More Info</button>
         <div class="more-info hidden">
         more info
@@ -94,11 +89,11 @@ $(async () => {
   }
 
   let chosenCoins = new Map();
+
   $("#container").on("click", "input.checkbox", function () {
     for (const coin of coins) {
       if (coin.symbol === this.classList[1]) {
         if (!chosenCoins.has(this.id) && this.checked) {
-          console.log(this);
           this.classList.add("checked");
           chosenCoins.set(this.id, coin);
         }
@@ -107,17 +102,17 @@ $(async () => {
           chosenCoins.delete(this.id);
         }
         if (chosenCoins.size === 6) showModal();
-        console.log(chosenCoins);
         break;
       }
     }
   });
 
   function showModal() {
+    $("#container").addClass("modal-open");
+    $("nav").addClass("modal-open");
     let content = `<div id="modal">`;
 
     for (const coin of chosenCoins) {
-      console.log(coin[1]);
       content += `<div class="modalCard">
       <div><img src="${coin[1].image.small}"></div>
       <div>${coin[1].symbol}</div>
@@ -139,16 +134,17 @@ $(async () => {
   });
 
   function hideModal() {
+    $("#container").removeClass("modal-open");
+    $("nav").removeClass("modal-open");
     $("#modal").fadeOut(500);
   }
 
-  //   -----------------------------------------------------------------------
   async function getMoreInfo(coinId) {
-    showSpinner(coinId); // Show spinner while fetching data
+    showSpinner(coinId);
 
     let prices = JSON.parse(localStorage.getItem(coinId));
     if (prices) {
-      hideSpinner(coinId); // Hide spinner if data is retrieved from localStorage
+      hideSpinner(coinId);
       return prices;
     }
 
@@ -164,12 +160,11 @@ $(async () => {
         ils,
       };
       localStorage.setItem(coinId, JSON.stringify(prices));
-      hideSpinner(coinId); // Hide spinner after data is loaded
+      hideSpinner(coinId);
       return prices;
     } catch (error) {
-      hideSpinner(coinId); // Hide spinner in case of an error
+      hideSpinner(coinId);
       console.error("Error fetching data:", error);
-      // Handle the error as needed
     }
   }
 
