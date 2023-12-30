@@ -1,8 +1,7 @@
 "use strict";
 $(async () => {
   const coins = await getJson("assets/jsons/coins.json");
-  createAbout();
-
+  createHome();
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
   $("#aboutLink").click(() => createAbout());

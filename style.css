@@ -92,8 +92,6 @@ body {
   background: rgba(203, 255, 237, 0.47);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5.7px);
-  -webkit-backdrop-filter: blur(5.7px);
   border: 1px solid rgb(160, 253, 203);
   box-shadow: 1px 5px 15px rgba(43, 94, 63, 0.527);
 }
@@ -102,7 +100,6 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5.7px);
-  -webkit-backdrop-filter: blur(5.7px);
   border: 1px solid rgb(160, 253, 203);
   box-shadow: 1px 5px 15px rgba(43, 94, 63, 0.527);
 }
@@ -112,7 +109,6 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5.7px);
-  -webkit-backdrop-filter: blur(5.7px);
   border: 1px solid rgb(160, 253, 203);
   box-shadow: 1px 5px 15px rgba(43, 94, 63, 0.527);
   color: #153721;
@@ -121,7 +117,7 @@ body {
 
 .card > div,
 .card > button {
-  margin-top: 7px;
+  margin-top: 3px;
 }
 
 .hidden {
