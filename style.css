@@ -9,7 +9,10 @@ body {
   background-color: #85c69c;
   margin: 0;
   padding: 0;
+  background-image: url("assets/images/white\ neural\ network\ lines.png");
+  background-attachment: fixed;
 }
+
 .card {
   border: 1px solid rgb(160, 253, 203);
   margin: 10px;
@@ -21,10 +24,38 @@ body {
   background-color: rgba(197, 255, 221, 0.228);
   overflow: auto;
   display: inline-block;
+  transition: transform 0.15s;
+}
+.aboutCard {
+  border: 1px solid rgb(160, 253, 203);
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 1px 15px 25px rgba(43, 94, 63, 0.527);
+  background-color: rgba(197, 255, 221, 0.228);
+  overflow: hidden;
+  transition: transform 0.15s;
+  position: absolute;
+  width: 50%;
+  left: 47%;
+  top: 250%;
+  backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-.card {
-  transition: transform 0.15s;
+.profileBg {
+  position: absolute;
+  top: 53vh;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.aboutCard > p {
+  text-align: left;
+  color: rgb(233, 244, 235);
+  text-shadow: 0px 0px 5px black;
 }
 
 .card:hover {
@@ -42,6 +73,7 @@ body {
   margin: auto;
   padding-top: 90px;
   box-shadow: 0 0 6vh 6vh rgba(159, 225, 198, 0.593);
+  backdrop-filter: blur(3px);
 }
 .logo {
   position: absolute;
@@ -74,7 +106,6 @@ body {
   border: 1px solid rgb(160, 253, 203);
   box-shadow: 1px 5px 15px rgba(43, 94, 63, 0.527);
 }
-
 
 .removeBtn {
   background: rgba(203, 255, 237, 0.47);
@@ -354,6 +385,7 @@ nav {
     transform: rotate(360deg);
   }
 }
-#container.modal-open, nav.modal-open {
-    pointer-events: none;
-  }
+#container.modal-open,
+nav.modal-open {
+  pointer-events: none;
+}

@@ -1,7 +1,7 @@
 "use strict";
 $(async () => {
   const coins = await getJson("assets/jsons/coins.json");
-  createHome();
+  createAbout();
 
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
@@ -20,7 +20,26 @@ $(async () => {
   }
 
   function createAbout() {
-    $("#container").html("About");
+    let aboutContainer = `
+    <div class="profileBg"><img src="assets/images/IMG-20230606-WA0021.jpg"></div>
+   <div class="aboutCard">
+    <p>Ohad Gadassi</p>
+    <p>
+      Skilled in HTML, CSS, JavaScript, Bootstrap, jQuery, AJAX, and TypeScript.
+    </p>
+    <p>
+      In my latest project, I've crafted a sleek cryptocurrency info app using
+      JavaScript and jQuery. It's a one-stop hub for crypto enthusiasts, offering
+      quick access to coin details, live prices, and engaging reports. The app's
+      stylish design features a personalized about page with a user profile image.
+      Users can effortlessly pick their top six cryptocurrencies, unlocking a cool
+      modal display. Plus, there's a dynamic ticker keeping you in the loop with
+      random crypto news bites. The code is organized for simplicity, making it a
+      joy for both users and developers alike.
+    </p>
+    </div>`;
+
+    $("#container").html(aboutContainer);
   }
 
   //   search function
