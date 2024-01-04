@@ -44,14 +44,22 @@ $(async () => {
   //   search function
   $("#searchBox").on("input", () => {
     const searchWord = $("#searchBox").val();
+    $(".notFoundImg").removeClass("hidden");
 
     for (const card of $(".card")) {
       card.classList.add("hidden");
     }
 
+    let flag = false;
+    $("#notFoundContainer").hide();
     for (const coin of coins) {
-      if (coin.symbol.toLowerCase().includes(searchWord.toLowerCase()))
+      if (coin.symbol.toLowerCase().includes(searchWord.toLowerCase())) {
         $(`.card${coin.name}`).removeClass("hidden");
+        flag = true;
+      }
+    }
+    if (!flag) {
+      $("#notFoundContainer").show();
     }
   });
 
@@ -132,7 +140,11 @@ $(async () => {
   function showModal() {
     $("#container").addClass("modal-open");
     $("nav").addClass("modal-open");
-    let content = `<div id="modal">`;
+    let content = `<div id="modal">
+    <div class='closeBtn'>x</div>
+    <div class='modalMsg'>
+    You can only choose up to 5 coins, Please remove one coin.
+    </div>`;
 
     for (const coin of chosenCoins) {
       content += `<div class="modalCard">
@@ -142,6 +154,7 @@ $(async () => {
       <button class="removeBtn ${coin[1].name}">remove</button>
       </div>`;
     }
+
     content += `</div>`;
     $("#modalContainer").html(content);
   }
@@ -152,6 +165,11 @@ $(async () => {
         $(coin.children[0].children[0]).click();
       }
     }
+    hideModal();
+  });
+  $("#modalContainer").on("click", ".closeBtn", function () {
+    const lastCoin = Array.from(chosenCoins.entries())[chosenCoins.size - 1];
+    chosenCoins.delete(lastCoin[0]);
     hideModal();
   });
 
