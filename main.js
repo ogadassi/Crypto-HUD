@@ -108,6 +108,10 @@ $(async () => {
 
   let chosenCoins = new Map();
 
+  setInterval(() => {
+    localStorage.clear();
+  }, 120000);
+
   $("#container").on("click", "input.checkbox", function () {
     for (const coin of coins) {
       if (coin.symbol === this.classList[1]) {
@@ -182,7 +186,9 @@ $(async () => {
       return prices;
     } catch (error) {
       hideSpinner(coinId);
-      console.error("Error fetching data:", error);
+      console.log("Error fetching data:", error);
+      const div = $(`button[data-coin-id="${coinId}"] + div`);
+      div.html(`Fetching prices failed. Please try again later.`).slideToggle();
     }
   }
 

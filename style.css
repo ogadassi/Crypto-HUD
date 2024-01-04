@@ -39,7 +39,7 @@ body {
   width: 50%;
   left: 47%;
   top: 250%;
-  backdrop-filter: blur(3px);
+
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -73,7 +73,6 @@ body {
   margin: auto;
   padding-top: 90px;
   box-shadow: 0 0 6vh 6vh rgba(159, 225, 198, 0.593);
-  backdrop-filter: blur(3px);
 }
 .logo {
   position: absolute;
@@ -85,6 +84,7 @@ body {
 }
 .logoPic {
   width: 500px;
+  transition: 0.5s;
 }
 
 /* (btn) */
@@ -99,7 +99,7 @@ body {
   background: rgba(203, 255, 237, 0.47);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5.7px);
+
   border: 1px solid rgb(160, 253, 203);
   box-shadow: 1px 5px 15px rgba(43, 94, 63, 0.527);
 }
@@ -108,7 +108,7 @@ body {
   background: rgba(203, 255, 237, 0.47);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5.7px);
+
   border: 1px solid rgb(160, 253, 203);
   box-shadow: 1px 5px 15px rgba(43, 94, 63, 0.527);
   color: #153721;
@@ -339,7 +339,6 @@ nav {
 
 .spinner {
   --clr: #6ea392;
-  /* color of spining  */
   width: 40px;
   height: 40px;
 }
@@ -384,4 +383,10 @@ nav {
 #container.modal-open,
 nav.modal-open {
   pointer-events: none;
+}
+
+@media screen and (max-width: 1253px) {
+  .logoPic {
+    width: 280px;
+  }
 }
