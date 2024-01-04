@@ -69,7 +69,7 @@ $(async () => {
           <div class="bar bar--bottom"></div>
       </label>
     </div>
-        <div><img src="${coin.image.large}"></div>
+        <div><img class='coinLogo' src="${coin.image.large}"></div>
         <div id='symbol'>(${coin.symbol})</div>
         <div id='name'>${coin.name}</div>
         <button id="btn${count}" class='moreInfo' data-coin-id="${coin.id}">More Info</button>
