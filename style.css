@@ -392,28 +392,6 @@ nav.modal-open {
 }
 
 @media screen and (max-width: 627px) {
-  .card {
-    border: 1px solid rgb(160, 253, 203);
-    margin: 10px;
-    padding: 10px;
-    width: 100px;
-    height: 150px;
-    border-radius: 10px;
-    box-shadow: 1px 15px 25px rgba(43, 94, 63, 0.527);
-    background-color: rgba(197, 255, 221, 0.228);
-    overflow: auto;
-    display: inline-block;
-    transition: transform 0.15s;
-    font-size: x-small;
-  }
-
-  .coinLogo {
-    width: 10px;
-  }
-  .toggle {
-    width: 10px;
-  }
-
   #modal {
     position: fixed;
     transform: translate(-50%, -50%);
@@ -446,4 +424,11 @@ nav.modal-open {
     overflow: auto;
     display: inline-block;
   }
+}
+
+
+@media screen and (max-width: 429px) {
+    .logoPic {
+        width: 200px;
+      }
 }
