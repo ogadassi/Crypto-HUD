@@ -2,7 +2,7 @@
 $(async () => {
   const coins = await getJson("assets/jsons/coins.json");
   let chosenCoins = new Map();
-  createAbout();
+  createHome();
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
   $("#aboutLink").click(() => createAbout());

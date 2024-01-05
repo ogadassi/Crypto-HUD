@@ -28,12 +28,10 @@ body {
 }
 
 .aboutCard {
-    border: 1px solid rgb(160, 253, 203);
-box-shadow: 1px 15px 25px rgba(43, 94, 63, 0.527);
-background-color: rgba(197, 255, 221, 0.228);
+  border: 1px solid rgb(160, 253, 203);
+  box-shadow: 1px 15px 25px rgba(43, 94, 63, 0.527);
+  background-color: rgba(197, 255, 221, 0.228);
 }
-
-
 
 .card:hover {
   transform: scale(1.1);
@@ -380,7 +378,7 @@ nav.modal-open {
 
 @media screen and (max-width: 1253px) {
   .logoPic {
-    width: 260px;
+    width: 58vw;
   }
 }
 
