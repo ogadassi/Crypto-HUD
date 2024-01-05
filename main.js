@@ -1,13 +1,17 @@
 "use strict";
 $(async () => {
   const coins = await getJson("assets/jsons/coins.json");
-  createHome();
+  let chosenCoins = new Map();
+  createAbout();
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
   $("#aboutLink").click(() => createAbout());
 
   //   pages creation
   function createHome() {
+    $("#chartContainer").hide();
+    $("#container").show();
+    chosenCoins.clear();
     displayCoins(coins);
     setInterval(() => {
       getRandomNewsItem();
@@ -15,28 +19,211 @@ $(async () => {
   }
 
   function createReports() {
-    $("#container").html("Reports");
+    $("#container").hide();
+    $("#chartContainer").show();
+
+    let chosenCoinsArr = [];
+    for (const coin of chosenCoins) {
+      chosenCoinsArr.push(coin[1]);
+    }
+
+    let coinName1 = "",
+      coinName2 = "",
+      coinName3 = "",
+      coinName4 = "",
+      coinName5 = "";
+
+    let dataPoints1 = [];
+    let dataPoints2 = [];
+    let dataPoints3 = [];
+    let dataPoints4 = [];
+    let dataPoints5 = [];
+
+    if (chosenCoinsArr[0]) coinName1 = chosenCoinsArr[0].name;
+    if (chosenCoinsArr[1]) coinName2 = chosenCoinsArr[1].name;
+    if (chosenCoinsArr[2]) coinName3 = chosenCoinsArr[2].name;
+    if (chosenCoinsArr[3]) coinName4 = chosenCoinsArr[3].name;
+    if (chosenCoinsArr[4]) coinName5 = chosenCoinsArr[4].name;
+
+    let options = {
+      title: {
+        text: "Live Coin Report",
+      },
+      axisX: {
+        title: "Time",
+      },
+      axisY: {
+        title: "Value",
+      },
+      toolTip: {
+        shared: true,
+      },
+      legend: {
+        cursor: "pointer",
+        verticalAlign: "top",
+        fontSize: 22,
+        fontColor: "rgb(0,0,0)",
+        itemclick: toggleDataSeries,
+      },
+      data: [
+        {
+          type: "line",
+          xValueType: "dateTime",
+          yValueFormatString: "###.00$",
+          xValueFormatString: "hh:mm:ss TT",
+          showInLegend: true,
+          name: coinName1 ? coinName1 : "",
+          dataPoints: dataPoints1,
+        },
+        {
+          type: "line",
+          xValueType: "dateTime",
+          yValueFormatString: "###.00$",
+          showInLegend: true,
+          name: coinName2 ? coinName2 : "",
+          dataPoints: dataPoints2,
+        },
+        {
+          type: "line",
+          xValueType: "dateTime",
+          yValueFormatString: "###.00$",
+          showInLegend: true,
+          name: coinName3 ? coinName3 : "",
+          dataPoints: dataPoints3,
+        },
+        {
+          type: "line",
+          xValueType: "dateTime",
+          yValueFormatString: "###.00$",
+          showInLegend: true,
+          name: coinName4 ? coinName4 : "",
+          dataPoints: dataPoints4,
+        },
+        {
+          type: "line",
+          xValueType: "dateTime",
+          yValueFormatString: "###.00$",
+          showInLegend: true,
+          name: coinName5 ? coinName5 : "",
+          dataPoints: dataPoints5,
+        },
+      ],
+    };
+
+    let chart = $("#chartContainer").CanvasJSChart(options);
+
+    function toggleDataSeries(e) {
+      if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
+        e.dataSeries.visible = false;
+      } else {
+        e.dataSeries.visible = true;
+      }
+      e.chart.render();
+    }
+
+    let updateInterval = 2000;
+
+    let time = new Date();
+
+    async function updateChart() {
+      time.setTime(time.getTime() + updateInterval);
+      let str = "";
+      for (const coin of chosenCoinsArr) {
+        str += coin.symbol + ",";
+      }
+
+      const coinValues = await getJson(
+        `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${str}&tsyms=USD`
+      );
+
+      let value1, value2, value3, value4, value5;
+
+      if (chosenCoinsArr[0])
+        value1 = coinValues[chosenCoinsArr[0].symbol.toUpperCase()].USD;
+      if (chosenCoinsArr[1])
+        value2 = coinValues[chosenCoinsArr[1].symbol.toUpperCase()].USD;
+      if (chosenCoinsArr[2])
+        value3 = coinValues[chosenCoinsArr[2].symbol.toUpperCase()].USD;
+      if (chosenCoinsArr[3])
+        value4 = coinValues[chosenCoinsArr[3].symbol.toUpperCase()].USD;
+      if (chosenCoinsArr[4])
+        value5 = coinValues[chosenCoinsArr[4].symbol.toUpperCase()].USD;
+
+      if (value1) {
+        dataPoints1.push({
+          x: time.getTime(),
+          y: value1,
+        });
+        options.data[0].legendText = coinName1 + " : " + value1 + "$";
+      }
+      if (value2) {
+        dataPoints2.push({
+          x: time.getTime(),
+          y: value2,
+        });
+        options.data[1].legendText = coinName2 + " : " + value2 + "$";
+      }
+      if (value3) {
+        dataPoints3.push({
+          x: time.getTime(),
+          y: value3,
+        });
+        options.data[2].legendText = coinName3 + " : " + value3 + "$";
+      }
+      if (value4) {
+        dataPoints4.push({
+          x: time.getTime(),
+          y: value4,
+        });
+        options.data[3].legendText = coinName4 + " : " + value4 + "$";
+      }
+      if (value5) {
+        dataPoints5.push({
+          x: time.getTime(),
+          y: value5,
+        });
+        options.data[4].legendText = coinName5 + " : " + value5 + "$";
+      }
+
+      $("#chartContainer").CanvasJSChart().render();
+    }
+    // generates first set of dataPoints
+    updateChart(100);
+    setInterval(function () {
+      updateChart();
+    }, updateInterval);
   }
 
   function createAbout() {
+    $("#container").show();
+    $("#chartContainer").hide();
     let aboutContainer = `
-    <div class="profileBg"><img src="assets/images/IMG-20230606-WA0021.jpg"></div>
-   <div class="aboutCard">
-    <p>Ohad Gadassi</p>
-    <p>
-      Skilled in HTML, CSS, JavaScript, Bootstrap, jQuery, AJAX, and TypeScript.
-    </p>
-    <p>
-      In my latest project, I've crafted a sleek cryptocurrency info app using
-      JavaScript and jQuery. It's a one-stop hub for crypto enthusiasts, offering
-      quick access to coin details, live prices, and engaging reports. The app's
-      stylish design features a personalized about page with a user profile image.
-      Users can effortlessly pick their top six cryptocurrencies, unlocking a cool
-      modal display. Plus, there's a dynamic ticker keeping you in the loop with
-      random crypto news bites. The code is organized for simplicity, making it a
-      joy for both users and developers alike.
-    </p>
-    </div>`;
+
+    
+    <div class="aboutCard rounded m-1 ">
+  <div class="row g-0">
+    <div class="col-md-6">
+      <img src="assets/images/IMG-20230606-WA0021.jpg" class="img-fluid rounded" alt="...">
+    </div>
+    <div class="col-md-6">
+      <div class="card-body">
+        <h5 class="card-title">Ohad Gadassi</h5>
+        <p class="card-text m-1 p-1"> Skilled in HTML, CSS, JavaScript, Bootstrap, jQuery, AJAX, and TypeScript.</p>
+        <p class="card-text m-1 p-1"><small class="text-body-secondary">      In my latest project, I've crafted a sleek cryptocurrency info app using
+        JavaScript and jQuery. It's a one-stop hub for crypto enthusiasts, offering
+        quick access to coin details, live prices, and engaging reports. The app's
+        stylish design features a personalized about page with a user profile image.
+        Users can effortlessly pick their top five cryptocurrencies, unlocking a cool
+        modal display. Plus, there's a dynamic ticker keeping you in the loop with
+        random crypto news bites. The code is organized for simplicity, making it a
+        joy for both users and developers alike.</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+    `;
 
     $("#container").html(aboutContainer);
   }
@@ -46,7 +233,7 @@ $(async () => {
     const searchWord = $("#searchBox").val();
     $(".notFoundImg").removeClass("hidden");
 
-    for (const card of $(".card")) {
+    for (const card of $(".card").toArray()) {
       card.classList.add("hidden");
     }
 
@@ -114,8 +301,6 @@ $(async () => {
       .slideToggle();
   }
 
-  let chosenCoins = new Map();
-
   setInterval(() => {
     localStorage.clear();
   }, 120000);
@@ -169,7 +354,9 @@ $(async () => {
   });
   $("#modalContainer").on("click", ".closeBtn", function () {
     const lastCoin = Array.from(chosenCoins.entries())[chosenCoins.size - 1];
-    chosenCoins.delete(lastCoin[0]);
+    $(`#${lastCoin[0]}`).click();
+    console.log(chosenCoins);
+
     hideModal();
   });
 
