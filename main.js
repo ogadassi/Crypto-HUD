@@ -1,5 +1,8 @@
 "use strict";
 $(async () => {
+  setInterval(() => {
+    getRandomNewsItem();
+  }, 15000);
   const coins = await getJson("assets/jsons/coins.json");
   let chosenCoins = new Map();
 
@@ -26,9 +29,6 @@ $(async () => {
     $("#container").show();
     chosenCoins.clear();
     displayCoins(coins);
-    setInterval(() => {
-      getRandomNewsItem();
-    }, 15000);
   }
 
   function createReports() {
