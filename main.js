@@ -8,6 +8,13 @@ $(async () => {
       createHome();
     }, 200);
   });
+  $(".navbar-brand").click(() => {
+    location.reload();
+  });
+  $(".logoPic").click(() => {
+    location.reload();
+  });
+
   //navbar links
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
