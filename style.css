@@ -425,8 +425,8 @@ nav.modal-open {
 }
 
 .notFoundImg {
-  width: 300px;
-  margin: 50px;
+  width: 30vw;
+  margin: 150px;
 }
 
 .modalMsg {
@@ -540,17 +540,17 @@ nav.modal-open {
 
 #chartContainer {
   position: absolute;
-  top: 20%;
+  top: 30%;
 }
 
-.togglee {
+.toggler {
   display: inline-block;
   position: relative;
   height: 100px;
   width: 100px;
 }
 
-.togglee:before {
+.toggler:before {
   box-shadow: 0;
   border-radius: 84.5px;
   background: #ffffff;
@@ -564,7 +564,9 @@ nav.modal-open {
   top: 50%;
 }
 
-.togglee .button {
+
+
+.toggler .button {
   transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
   box-shadow: 0 15px 25px -4px rgba(0, 0, 0, 0.5),
     inset 0 -3px 4px -1px rgba(0, 0, 0, 0.2),
@@ -584,7 +586,7 @@ nav.modal-open {
   top: 50%;
 }
 
-.togglee .label {
+.toggler .label {
   transition: color 300ms ease-out;
   line-height: 101px;
   text-align: center;
@@ -598,7 +600,7 @@ nav.modal-open {
   color: rgba(0, 0, 0, 0.9);
 }
 
-.togglee input {
+.toggler input {
   opacity: 0;
   position: absolute;
   cursor: pointer;
@@ -609,7 +611,7 @@ nav.modal-open {
   top: 0;
 }
 
-.togglee input:active ~ .button {
+.toggler input:active ~ .button {
   filter: blur(0.5px);
   box-shadow: 0 12px 25px -4px rgba(0, 0, 0, 0.4),
     inset 0 -8px 30px 1px rgba(255, 255, 255, 0.9),
@@ -618,12 +620,12 @@ nav.modal-open {
     inset 0 0 10px 1px rgba(255, 255, 255, 0.6);
 }
 
-.togglee input:active ~ .label {
+.toggler input:active ~ .label {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.45);
 }
 
-.togglee input:checked ~ .button {
+.toggler input:checked ~ .button {
   filter: blur(0.5px);
   box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.4),
     inset 0 -8px 25px -1px rgba(255, 255, 255, 0.9),
@@ -632,6 +634,6 @@ nav.modal-open {
     inset 0 0 5px 1px rgba(255, 255, 255, 0.6);
 }
 
-.togglee input:checked ~ .label {
+.toggler input:checked ~ .label {
   color: rgba(0, 0, 0, 0.8);
 }

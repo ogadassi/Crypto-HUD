@@ -5,8 +5,9 @@ $(async () => {
   }, 15000);
   const coins = await getJson("assets/jsons/coins.json");
   let chosenCoins = new Map();
+  $("#searchBox").hide();
 
-  $(".togglee").click(() => {
+  $(".toggler").click(() => {
     setTimeout(() => {
       createHome();
     }, 200);
@@ -25,15 +26,33 @@ $(async () => {
 
   //   pages creation
   function createHome() {
+    $(".notFoundImg").addClass("hidden");
     $("#chartContainer").hide();
+    $("#searchBox").show();
     $("#container").show();
-    chosenCoins.clear();
+    // chosenCoins.clear();
+    // if (chosenCoins.size > 0) {
+    //   console.log(chosenCoins);
+    //   for (const button of chosenCoins) {
+    //     console.log($(`.checkbox.${button[0]}`));
+    //   }
+    // }
+
     displayCoins(coins);
   }
 
   function createReports() {
     $("#container").hide();
+    $("#searchBox").hide();
     $("#chartContainer").show();
+
+    if (chosenCoins.size <= 0) {
+      $("#notFoundContainer").show();
+      $(".notFoundImg").removeClass("hidden");
+      $("#chartContainer").hide();
+    } else {
+      $(".notFoundImg").addClass("hidden");
+    }
 
     let chosenCoinsArr = [];
     for (const coin of chosenCoins) {
@@ -208,7 +227,9 @@ $(async () => {
   }
 
   function createAbout() {
+    $(".notFoundImg").addClass("hidden");
     $("#container").show();
+    $("#searchBox").hide();
     $("#chartContainer").hide();
     let aboutContainer = `
 
@@ -270,7 +291,7 @@ $(async () => {
     for (const coin of coins) {
       const div = `<div class="card card${coin.name}">
       <div id="menuToggle">
-      <input class="checkbox ${coin.symbol}" id="checkbox${coin.id}" type="checkbox">
+      <input class="checkbox ${coin.symbol} ${coin.name}" id="checkbox${coin.id}" type="checkbox">
       <label class="toggle" for="checkbox${coin.id}">
           <div class="bar bar--top"></div>
           <div class="bar bar--middle"></div>
@@ -319,6 +340,7 @@ $(async () => {
   }, 120000);
 
   $("#container").on("click", "input.checkbox", function () {
+    console.log(chosenCoins);
     for (const coin of coins) {
       if (coin.symbol === this.classList[1]) {
         if (!chosenCoins.has(this.id) && this.checked) {
