@@ -26,19 +26,22 @@ $(async () => {
 
   //   pages creation
   function createHome() {
+    displayCoins(coins);
     $(".notFoundImg").addClass("hidden");
     $("#chartContainer").hide();
     $("#searchBox").show();
     $("#container").show();
     // chosenCoins.clear();
-    // if (chosenCoins.size > 0) {
-    //   console.log(chosenCoins);
-    //   for (const button of chosenCoins) {
-    //     console.log($(`.checkbox.${button[0]}`));
-    //   }
-    // }
+    if (chosenCoins.size > 0) {
+      console.log(chosenCoins);
+      const selectButtons = $(".checkbox").toArray();
 
-    displayCoins(coins);
+      for (const button of selectButtons) {
+        if (chosenCoins.has(button.id)) {
+          $(button).addClass("checked");
+        }
+      }
+    }
   }
 
   function createReports() {
@@ -291,7 +294,7 @@ $(async () => {
     for (const coin of coins) {
       const div = `<div class="card card${coin.name}">
       <div id="menuToggle">
-      <input class="checkbox ${coin.symbol} ${coin.name}" id="checkbox${coin.id}" type="checkbox">
+      <input class="checkbox ${coin.symbol} " id="checkbox${coin.id}" type="checkbox">
       <label class="toggle" for="checkbox${coin.id}">
           <div class="bar bar--top"></div>
           <div class="bar bar--middle"></div>
