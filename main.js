@@ -1,54 +1,68 @@
 "use strict";
+
+// Function to initialize the application
 $(async () => {
+  // Set interval to fetch random news every 15 seconds
   setInterval(() => {
     getRandomNewsItem();
   }, 15000);
+
+  // Fetch coins data from JSON file
   const coins = await getJson("assets/jsons/coins.json");
+
+  // Map to store selected coins
   let chosenCoins = new Map();
+
+  // Hide the search box initially
   $("#searchBox").hide();
 
+  // Event handler for delaying navigation from start page to home (for the animation)
   $(".toggler").click(() => {
     setTimeout(() => {
       createHome();
     }, 200);
   });
-  $(".navbar-brand").click(() => {
-    location.reload();
-  });
-  $(".logoPic").click(() => {
+
+  // Reload the page on clicking the navbar brand or logo
+  $(".navbar-brand, .logoPic").click(() => {
     location.reload();
   });
 
-  //navbar links
+  // Navbar links
   $("#homeLink").click(() => createHome());
   $("#reportsLink").click(() => createReports());
   $("#aboutLink").click(() => createAbout());
 
-  //   pages creation
+  // Function to create the home page
   function createHome() {
+    // Display coins on the home page
     displayCoins(coins);
     $(".notFoundImg").addClass("hidden");
     $("#chartContainer").hide();
     $("#searchBox").show();
     $("#container").show();
-    // chosenCoins.clear();
+
+    // click previously selected buttons if there are any
+    const selectButtons = $(".checkbox").toArray();
     if (chosenCoins.size > 0) {
       console.log(chosenCoins);
-      const selectButtons = $(".checkbox").toArray();
 
       for (const button of selectButtons) {
         if (chosenCoins.has(button.id)) {
           $(button).addClass("checked");
         }
       }
+      console.log(selectButtons);
     }
+    console.log(chosenCoins);
   }
-
+  // Function to create the reports page and hide the unused elements
   function createReports() {
     $("#container").hide();
     $("#searchBox").hide();
     $("#chartContainer").show();
 
+    // Display a image if no coins are selected
     if (chosenCoins.size <= 0) {
       $("#notFoundContainer").show();
       $(".notFoundImg").removeClass("hidden");
@@ -57,11 +71,13 @@ $(async () => {
       $(".notFoundImg").addClass("hidden");
     }
 
+    // Extract selected coins into an array
     let chosenCoinsArr = [];
     for (const coin of chosenCoins) {
       chosenCoinsArr.push(coin[1]);
     }
 
+    // Variables to store coin names and data points for the chart
     let coinName1 = "",
       coinName2 = "",
       coinName3 = "",
@@ -74,6 +90,7 @@ $(async () => {
     let dataPoints4 = [];
     let dataPoints5 = [];
 
+    // Set coin names based on selection
     if (chosenCoinsArr[0]) coinName1 = chosenCoinsArr[0].name;
     if (chosenCoinsArr[1]) coinName2 = chosenCoinsArr[1].name;
     if (chosenCoinsArr[2]) coinName3 = chosenCoinsArr[2].name;
@@ -97,7 +114,7 @@ $(async () => {
         cursor: "pointer",
         verticalAlign: "top",
         fontSize: 22,
-        fontColor: "rgb(0,0,0)",
+        fontColor: "rgb(32,138,74)",
         itemclick: toggleDataSeries,
       },
       data: [
@@ -144,9 +161,10 @@ $(async () => {
         },
       ],
     };
-
+    // Initialize the chart
     let chart = $("#chartContainer").CanvasJSChart(options);
 
+    // Function to toggle visibility of data series on the chart
     function toggleDataSeries(e) {
       if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
         e.dataSeries.visible = false;
@@ -156,10 +174,12 @@ $(async () => {
       e.chart.render();
     }
 
+    // Update interval for chart data
     let updateInterval = 2000;
 
     let time = new Date();
 
+    // Function to update the chart with new data
     async function updateChart() {
       time.setTime(time.getTime() + updateInterval);
       let str = "";
@@ -222,13 +242,16 @@ $(async () => {
 
       $("#chartContainer").CanvasJSChart().render();
     }
-    // generates first set of dataPoints
+    // Initial call to populate chart with data
     updateChart(100);
+
+    // Set interval to continuously update the chart
     setInterval(function () {
       updateChart();
     }, updateInterval);
   }
 
+  // Function to create the about page
   function createAbout() {
     $(".notFoundImg").addClass("hidden");
     $("#container").show();
@@ -265,7 +288,7 @@ $(async () => {
     $("#container").html(aboutContainer);
   }
 
-  //   search function
+  //   Search function
   $("#searchBox").on("input", () => {
     const searchWord = $("#searchBox").val();
     $(".notFoundImg").removeClass("hidden");
@@ -287,7 +310,7 @@ $(async () => {
     }
   });
 
-  //   coin display
+  // Function to display coins on the home page
   function displayCoins(coins) {
     let content = "";
     let count = 0;
@@ -322,6 +345,8 @@ $(async () => {
       button.addEventListener("click", toggleMoreInfo);
     }
   }
+
+  // Event listener for displaying more information on coin click
   async function toggleMoreInfo() {
     const coinId = $(this).data("coin-id");
     const prices = await getMoreInfo(coinId);
@@ -338,12 +363,13 @@ $(async () => {
       .slideToggle();
   }
 
+  // Set interval to clear local storage every 2 minutes
   setInterval(() => {
     localStorage.clear();
   }, 120000);
 
+  // Event listener for selecting/deselecting coins
   $("#container").on("click", "input.checkbox", function () {
-    console.log(chosenCoins);
     for (const coin of coins) {
       if (coin.symbol === this.classList[1]) {
         if (!chosenCoins.has(this.id) && this.checked) {
@@ -360,6 +386,19 @@ $(async () => {
     }
   });
 
+  // Parallax effect on scroll
+  const parallax = document.querySelectorAll("body");
+  const speed = 0.5;
+
+  window.onscroll = function () {
+    [].slice.call(parallax).forEach(function (el) {
+      const windowYOffset = window.pageYOffset;
+      const elBackgroundPos = "0%" + windowYOffset * speed + "px";
+      el.style.backgroundPosition = elBackgroundPos;
+    });
+  };
+
+  // Function to show modal when maximum coins are selected
   function showModal() {
     $("#container").addClass("modal-open");
     $("nav").addClass("modal-open");
@@ -382,6 +421,7 @@ $(async () => {
     $("#modalContainer").html(content);
   }
 
+  // Event listener for removing a coin from modal
   $("#modalContainer").on("click", ".removeBtn", function () {
     for (const coin of $(`.card`).toArray()) {
       if (coin.children[3].innerText === this.classList[1]) {
@@ -390,6 +430,7 @@ $(async () => {
     }
     hideModal();
   });
+  // Event listener for closing the modal
   $("#modalContainer").on("click", ".closeBtn", function () {
     const lastCoin = Array.from(chosenCoins.entries())[chosenCoins.size - 1];
     $(`#${lastCoin[0]}`).click();
@@ -398,12 +439,14 @@ $(async () => {
     hideModal();
   });
 
+  // Function to hide the modal
   function hideModal() {
     $("#container").removeClass("modal-open");
     $("nav").removeClass("modal-open");
     $("#modal").fadeOut(500);
   }
 
+  // Function to fetch more information about a coin
   async function getMoreInfo(coinId) {
     showSpinner(coinId);
 
@@ -435,14 +478,17 @@ $(async () => {
     }
   }
 
+  // Function to show a spinner while fetching more information
   function showSpinner(coinId) {
     $(`#spinner${coinId}`).removeClass("hidden");
   }
 
+  // Function to hide the spinner
   function hideSpinner(coinId) {
     $(`#spinner${coinId}`).addClass("hidden");
   }
 
+  // Function to fetch a random news item
   async function getRandomNewsItem() {
     const news = await getJson("assets/jsons/news.json");
     $(".ticker__item").text(
@@ -450,6 +496,7 @@ $(async () => {
     );
   }
 
+  // Function to fetch JSON data from a URL
   async function getJson(url) {
     const response = await fetch(url);
     const json = response.json();
