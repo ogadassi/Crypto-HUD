@@ -19,6 +19,7 @@ $(async () => {
   // Event handler for delaying navigation from start page to home (for the animation)
   $(".toggler").click(() => {
     setTimeout(() => {
+      $("#homeLink").addClass("active");
       createHome();
     }, 200);
   });
@@ -50,6 +51,7 @@ $(async () => {
       for (const button of selectButtons) {
         if (chosenCoins.has(button.id)) {
           $(button).addClass("checked");
+          $(button).click();
         }
       }
       console.log(selectButtons);
