@@ -46,17 +46,13 @@ $(async () => {
     // click previously selected buttons if there are any
     const selectButtons = $(".checkbox").toArray();
     if (chosenCoins.size > 0) {
-      console.log(chosenCoins);
-
       for (const button of selectButtons) {
         if (chosenCoins.has(button.id)) {
           $(button).addClass("checked");
           $(button).click();
         }
       }
-      console.log(selectButtons);
     }
-    console.log(chosenCoins);
   }
   // Function to create the reports page and hide the unused elements
   function createReports() {
@@ -436,7 +432,6 @@ $(async () => {
   $("#modalContainer").on("click", ".closeBtn", function () {
     const lastCoin = Array.from(chosenCoins.entries())[chosenCoins.size - 1];
     $(`#${lastCoin[0]}`).click();
-    console.log(chosenCoins);
 
     hideModal();
   });
@@ -474,7 +469,6 @@ $(async () => {
       return prices;
     } catch (error) {
       hideSpinner(coinId);
-      console.log("Error fetching data:", error);
       const div = $(`button[data-coin-id="${coinId}"] + div`);
       div.html(`Fetching prices failed. Please try again later.`).slideToggle();
     }
