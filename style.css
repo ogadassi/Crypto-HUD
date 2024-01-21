@@ -94,6 +94,7 @@ body {
   justify-self: center;
   align-self: center;
   position: absolute;
+  cursor: pointer;
   top: 10px;
   left: 10px;
   width: 30px;
